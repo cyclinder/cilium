@@ -75,7 +75,7 @@ var _ = SkipDescribeIf(helpers.RunsOn54Kernel, "K8sServicesTest", func() {
 		BeforeAll(func() {
 			DeployCiliumAndDNS(kubectl, ciliumFilename)
 
-			toApply := []string{"demo.yaml", "echo-svc.yaml", "echo-policy.yaml"}
+			toApply := []string{"demo.yaml", "demo_ds.yaml", "echo-svc.yaml", "echo-policy.yaml"}
 			if helpers.DualStackSupported() {
 				toApply = append(toApply, "demo_v6.yaml", "echo-svc_v6.yaml")
 				if helpers.DualStackSupportBeta() {
@@ -350,7 +350,7 @@ var _ = SkipDescribeIf(helpers.RunsOn54Kernel, "K8sServicesTest", func() {
 			})
 		})
 
-		Context("TFTP with DNS Proxy port collision", func() {
+		SkipContextIf(helpers.RunsWithKubeProxyReplacement, "TFTP with DNS Proxy port collision", func() {
 			var (
 				demoPolicy    string
 				ciliumPodK8s1 string
